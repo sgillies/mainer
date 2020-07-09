@@ -1,0 +1,11 @@
+[build-system]
+requires = ["flit_core >=2,<4"]
+build-backend = "flit_core.buildapi"
+
+[tool.flit.metadata]
+module = "mainer"
+author = "Sean Gillies"
+author-email = "sean.gillies@gmail.com"
+home-page = "http://github.com/sgillies/mainer"
+classifiers = ["License :: OSI Approved :: MIT License"]
+requires = ["click", "pygithub", "structlog"]
