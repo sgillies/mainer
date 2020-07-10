@@ -12,7 +12,7 @@ import github
 import structlog
 from structlog.stdlib import LoggerFactory
 
-__version__ = "1.0dev"
+__version__ = "1.0dev1"
 
 log = structlog.get_logger(__name__)
 
@@ -26,6 +26,9 @@ log = structlog.get_logger(__name__)
     help="Print comment diffs to stderr, but make no edits.",
 )
 @click.option(
+    "--from-branch", default="master", help="Name of the branch to be renamed"
+)
+@click.option(
     "--rewrite-links-to",
     "linked_repo",
     default=None,
@@ -36,7 +39,7 @@ log = structlog.get_logger(__name__)
     default=None,
     help="A GitHub access token. May also be set by GITHUB_ACCESS_TOKEN or GithubAccessToken in the environment.",
 )
-def main(repo, dry_run, linked_repo, access_token):
+def main(repo, dry_run, from_branch, linked_repo, access_token):
     """Rewrite links in a repo's issue and PR comments so that they point to the linked repo's main branch instead of its master branch.
 
     Example:
@@ -54,10 +57,13 @@ def main(repo, dry_run, linked_repo, access_token):
     g = github.Github(access_token)
     repo = g.get_repo(repo)
 
-    pattern = re.compile(rf"{linked_repo}/(\w+)/master")
+    pattern = re.compile(rf"{linked_repo}/(\w+)/{from_branch}")
 
     for item in itertools.chain(
-        repo.get_issues(), repo.get_issues_comments(), repo.get_pulls(), repo.get_pulls_comments()
+        repo.get_issues(),
+        repo.get_issues_comments(),
+        repo.get_pulls(),
+        repo.get_pulls_comments(),
     ):
         match = re.search(pattern, item.body)
         if match:
@@ -82,7 +88,9 @@ def main(repo, dry_run, linked_repo, access_token):
                     url=url,
                     diff=list(line for line in diff),
                 )
-                if isinstance(item, (github.Issue.Issue, github.PullRequest.PullRequest)):
+                if isinstance(
+                    item, (github.Issue.Issue, github.PullRequest.PullRequest)
+                ):
                     item.edit(body=modified_body)
                 else:
                     item.edit(modified_body)
