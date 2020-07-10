@@ -7,6 +7,13 @@ Branch renaming is the easy part. But you may be left with hundreds or
 thousands of links to "master" in GitHub issue and PR comments. This is where
 mainer comes in.
 
+Mainer uses the GitHub API to find issues, PRs, and comments which have text
+linking to the master branch of a repo (the same or another) and rewrites that
+text to link to the main branch instead.
+
+Note well: this is pre-release software. Do use mainer's `--dry-run` mode first
+to see what would happen in a real, text-altering use of the program.
+
 # Usage
 
 ```
