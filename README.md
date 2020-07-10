@@ -14,6 +14,10 @@ text to link to the main branch instead.
 Note well: this is pre-release software. Do use mainer's `--dry-run` mode first
 to see what would happen in a real, text-altering use of the program.
 
+# Installation
+
+`python -m pip install --pre mainer`
+
 # Usage
 
 ```
@@ -38,3 +42,11 @@ Options:
 
   --help                   Show this message and exit.
 ```
+
+## Dry run mode
+
+With the `--dry-run` option, mainer prints diffs representing the changes it would make to comments of the target repo.
+
+## Editing mode
+
+**Attention**: without the `--dry-run` option, mainer will edit comments without confirmation prompts or backups (like, for example `sed -i`).
